@@ -58,7 +58,7 @@ func (s *Story) Update(title string, story *Story) error {
 }
 
 func (s *Story) Delete(title string) error {
-	tx := Db.Db.Delete(&Story{}, title)
+	tx := Db.Db.Where("Title = ?", title).Delete(&Story{})
 	return tx.Error
 }
 
