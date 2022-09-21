@@ -26,8 +26,8 @@ func (s *Story) GetAll() ([]Story, error) {
 }
 
 func (s *Story) GetByTitle(title string) (Story, error) {
-	keyword := Story{Title: title}
-	tx := Db.Db.First(&keyword)
+	keyword := Story{}
+	tx := Db.Db.Where("Title = ?", title).First(&keyword)
 	return keyword, tx.Error
 }
 
