@@ -1,4 +1,4 @@
-package storyMd
+package storyOrm
 
 import (
 	Db "blog/db"
@@ -20,46 +20,53 @@ func NewOrmStory() *Story {
 }
 
 func (s *Story) GetAll() ([]Story, error) {
-	keywords := []Story{}
-	tx := Db.Db.Find(&keywords)
-	return keywords, tx.Error
+	stories := []Story{}
+	err := Db.Db.Find(&stories).Error
+	return stories, err
 }
 
 func (s *Story) GetByTitle(title string) (Story, error) {
-	keyword := Story{}
-	tx := Db.Db.Where("Title = ?", title).First(&keyword)
-	return keyword, tx.Error
+	story := Story{}
+	err := Db.Db.Where("Title = ?", title).First(&story).Error
+	return story, err
 }
 
 func (s *Story) Create(story *Story) error {
 	if inputCheck(story.Title, story.Author, story.Context) {
 		return errors.New("check the input info")
 	}
-	tx := Db.Db.Model(&Story{}).Create(map[string]interface{}{
+	err := Db.Db.Model(&Story{}).Create(map[string]interface{}{
 		"Title":   story.Title,
 		"Author":  story.Author,
 		"Context": story.Context,
 		"Label":   story.Label,
-	})
-	return tx.Error
+	}).Error
+	return err
 }
 
 func (s *Story) Update(title string, story *Story) error {
 	if inputCheck(story.Title, story.Author, story.Context) {
 		return errors.New("check the input info")
 	}
-	tx := Db.Db.Model(&Story{}).Where("Title = ?", title).Updates(map[string]interface{}{
+	err := Db.Db.Model(&Story{}).Where("Title = ?", title).Updates(map[string]interface{}{
 		"Title":   story.Title,
 		"Author":  story.Author,
 		"Context": story.Context,
 		"Label":   story.Label,
-	})
-	return tx.Error
+	}).Error
+	return err
 }
 
 func (s *Story) Delete(title string) error {
-	tx := Db.Db.Where("Title = ?", title).Delete(&Story{})
-	return tx.Error
+	err := Db.Db.Where("Title = ?", title).Delete(&Story{}).Error
+	return err
+}
+
+// input: [][key, value]
+func (s *Story) GetByKey(keyValPair map[string]interface{}) ([]Story, error) {
+	stories := []Story{}
+	err := Db.Db.Where(keyValPair).Find(&stories).Error
+	return stories, err
 }
 
 func inputCheck(title, author, context string) bool {

@@ -1,47 +1,47 @@
-package story
+package adminAuthor
 
 import (
-	StoryMd "blog/model/story"
+	AuthorOrm "blog/model/author"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetAll(ctx *gin.Context) {
-	Orm := StoryMd.NewOrmStory()
-	stories, err := Orm.GetAll()
+	Orm := AuthorOrm.NewOrmAuthor()
+	authors, err := Orm.GetAll()
 	status := http.StatusOK
 	if err != nil {
 		status = http.StatusBadRequest
 	}
 	ctx.JSON(status, gin.H{
-		"context": stories,
+		"context": authors,
 		"error":   err,
 	})
 }
 
 func GetByTitle(ctx *gin.Context) {
-	Orm := StoryMd.NewOrmStory()
-	story, err := Orm.GetByTitle(ctx.Param("title"))
+	Orm := AuthorOrm.NewOrmAuthor()
+	author, err := Orm.GetByTitle(ctx.Param("name"))
 	status := http.StatusOK
 	if err != nil {
 		status = http.StatusBadRequest
 	}
 	ctx.JSON(status, gin.H{
-		"context": story,
+		"context": author,
 		"error":   err,
 	})
 }
 
 func Create(ctx *gin.Context) {
-	Orm := StoryMd.NewOrmStory()
-	story := &StoryMd.Story{
-		Title:   ctx.PostForm("title"),
-		Author:  ctx.PostForm("author"),
-		Context: ctx.PostForm("context"),
-		Label:   ctx.PostForm("label"),
+	Orm := AuthorOrm.NewOrmAuthor()
+	author := &AuthorOrm.Author{
+		Name:            ctx.PostForm("name"),
+		Introduce:       ctx.PostForm("introduce"),
+		PhotoAddress:    ctx.PostForm("photoaddress"),
+		PersonalWebsite: ctx.PostForm("personalwebsite"),
 	}
-	err := Orm.Create(story)
+	err := Orm.Create(author)
 	status := http.StatusOK
 	if err != nil {
 		status = http.StatusBadRequest
@@ -52,14 +52,14 @@ func Create(ctx *gin.Context) {
 }
 
 func Update(ctx *gin.Context) {
-	Orm := StoryMd.NewOrmStory()
-	story := &StoryMd.Story{
-		Title:   ctx.PostForm("title"),
-		Author:  ctx.PostForm("author"),
-		Context: ctx.PostForm("context"),
-		Label:   ctx.PostForm("label"),
+	Orm := AuthorOrm.NewOrmAuthor()
+	author := &AuthorOrm.Author{
+		Name:            ctx.PostForm("name"),
+		Introduce:       ctx.PostForm("introduce"),
+		PhotoAddress:    ctx.PostForm("photoaddress"),
+		PersonalWebsite: ctx.PostForm("personalwebsite"),
 	}
-	err := Orm.Update(ctx.Param("title"), story)
+	err := Orm.Update(ctx.Param("name"), author)
 	status := http.StatusOK
 	if err != nil {
 		status = http.StatusBadRequest
@@ -70,8 +70,8 @@ func Update(ctx *gin.Context) {
 }
 
 func Delete(ctx *gin.Context) {
-	Orm := StoryMd.NewOrmStory()
-	err := Orm.Delete(ctx.Param("title"))
+	Orm := AuthorOrm.NewOrmAuthor()
+	err := Orm.Delete(ctx.Param("name"))
 	status := http.StatusOK
 	if err != nil {
 		status = http.StatusBadRequest
