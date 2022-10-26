@@ -81,14 +81,14 @@ func Delete(ctx *gin.Context) {
 	})
 }
 
-func GetByKey(ctx *gin.Context) {
-	keyValPair := map[string]interface{}{}
-	queries := ctx.Request.URL.Query()
-	for key, val := range queries {
-		keyValPair[key] = val
+func GetByFilter(ctx *gin.Context) {
+	filters := make(map[string]interface{})
+	for key, val := range ctx.Request.URL.Query() {
+		filters[key] = val
 	}
+
 	Orm := StoryOrm.NewOrmStory()
-	stories, err := Orm.GetByKey(keyValPair)
+	stories, err := Orm.GetByFilter(filters)
 	status := http.StatusOK
 	if err != nil {
 		status = http.StatusBadRequest
