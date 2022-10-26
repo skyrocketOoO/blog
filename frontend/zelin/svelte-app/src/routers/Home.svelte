@@ -4,9 +4,8 @@
 
 	import { onMount } from 'svelte';
 	export let stories = [];
-    let error = null;
     onMount(async () => {
-		const res = await axios.get(`http://localhost:8080/story/`);
+		const res = await axios.get("http://localhost:8080/story/");
 		stories = await res.data["context"];
 	});
 
