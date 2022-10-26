@@ -55,7 +55,7 @@ func main() {
 			story.POST("/", AdminStory.Create)
 			story.DELETE("/:title", AdminStory.Delete)
 			story.PUT("/:title", AdminStory.Update)
-			story.GET("/key", AdminStory.GetByKey)
+			story.GET("/filter", AdminStory.GetByFilter)
 		}
 
 		author := admin.Group("/author")

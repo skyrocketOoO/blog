@@ -1,35 +1,39 @@
 <script>
-	let columns = ["Select", "Author", "Title", "Context"]
-	let data = [
-    [5, "John", "john@example.com", "(353) 01 222 3333"],
-    [1, "Mark", "mark@gmail.com", "(01) 22 888 4444"],
-    [2, "Eoin", "eoin@gmail.com", "0097 22 654 00033"],
-    [3, "Sarah", "sarahcdd@gmail.com", "+322 876 1233"],
-    [4, "Afshin", "afshin@mail.com", "(353) 22 87 8356"]
-    ]
+	let columns = ["Select", "Author", "Title", "Context"];
 
     let selectedRow = {};
     let address = "http://localhost:8080/story/";
 	
+
     import axios from 'axios';
+    let auth = {
+        username: 'abc',
+        password: '123'
+    };
+    
+    export let stories = [];
+    import { onMount } from 'svelte';
+    onMount(async () => {
+        const res = await axios.get(address);
+        stories = await res.data["context"];
+	});
 
-    async function readStory(){
-        let filter = document.getElementById("filter");
-        filter = filterToURL(filter)
-        try{
-            if (filter == {}){
-                const res = await axios.get(address)
-            }else{
-                const res = await axios.get(address + filter)
+    export let fStories = [];
+    function filteredStories() {
+        fStories = [];
+        let f = document.getElementById("filter")
+        for (const story of stories){
+            for (const [_, value] of Object.entries(story)){
+                if (value.include(f)){
+                    fStories.push(story);
+                    break;
+                }
             }
-            console.log(res)
-        }catch(err){
-            console.log(err)
         }
-        
     }
+    
 
-    function filterToURL(filter){
+    function filterToURL(filter) {
         res  = "?"
         for (const [key, value] of Object.entries(filter)){
             let add  = "";
@@ -43,11 +47,27 @@
         return res;
     }
 
+    async function readStory(){
+        let filter = document.getElementById("filter");
+        filter = filterToURL(filter)
+        try{
+            if (filter == {}){
+                const res = await axios.get(address, auth)
+            }else{
+                const res = await axios.get(address + filter, auth)
+            }
+            data = await res.data["context"];
+            console.log(res)
+        }catch(err){
+            console.log(err)
+        }
+    }
+
 	async function deleteStories(selectedRow) {
 		for (const [key, value] of Object.entries(selectedRow)) {
             if (value != 1) continue;
             try{
-                const res = await axios.delete(address + key);
+                const res = await axios.delete(address + key, auth);
                 console.log(res)
             }catch(err){
                 console.log(err)
@@ -70,7 +90,7 @@
 </script>
 
 <div class="sticky"><a href="/">head</a></div>
-<input type="text" id="filter" name="filter" placeholder="filter..." on:keyup={readStory}>
+<input type="text" id="filter" name="filter" placeholder="filter..." on:keyup={filteredStories}>
 <button on:click={() => deleteStories(selectedRow)}>delete</button>
 <button on:click={() => createStory()}>create</button>
 
@@ -83,13 +103,13 @@
         </tr>
     </thead>
     <tbody>
-        {#each data as row}
+        {#each stories as row}
             <tr>
                 <td>
                     <input type="checkbox" bind:checked={selectedRow[row[0]]} on:click={() => click(row[0])}>
                 </td>
-                {#each row.slice(1) as cell}
-                    <td contenteditable="true" bind:innerHTML={cell} />
+                {#each columns.slice(1) as cell}
+                    <td contenteditable="true" bind:innerHTML={row[cell]} />
                 {/each}
             </tr>
         {/each}
@@ -117,7 +137,7 @@
 
     table{
         border-collapse: collapse;
-        width: 60%;
+        width: 80%;
         margin: 25px;
         position: absolute;
         left: 0%;

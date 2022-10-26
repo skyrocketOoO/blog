@@ -63,9 +63,9 @@ func (s *Story) Delete(title string) error {
 }
 
 // input: [][key, value]
-func (s *Story) GetByKey(keyValPair map[string]interface{}) ([]Story, error) {
+func (s *Story) GetByFilter(filters map[string]interface{}) ([]Story, error) {
 	stories := []Story{}
-	err := Db.Db.Where(keyValPair).Find(&stories).Error
+	err := Db.Db.Where(filters).Find(&stories).Error
 	return stories, err
 }
 
