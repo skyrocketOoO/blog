@@ -118,6 +118,7 @@
 
 
 <style>
+    
     :global(body){
         background-color: #fdf6e3;
     }
