@@ -1,4 +1,17 @@
 package config
 
-// db
-var Dsn = "host=localhost user=postgres password=password dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+import (
+	"fmt"
+
+	"github.com/spf13/viper"
+)
+
+func Init() {
+	viper.SetConfigName("config")
+	viper.AddConfigPath("./config")
+	viper.SetConfigType("yaml")
+
+	if err := viper.ReadInConfig(); err != nil {
+		panic(fmt.Errorf("fatal error config file: %w", err))
+	}
+}

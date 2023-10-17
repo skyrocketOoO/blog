@@ -1,14 +1,14 @@
-package adminStory
+package usecase
 
 import (
-	StoryOrm "blog/model/story"
+	"blog/internal/infra/repository"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetAll(ctx *gin.Context) {
-	Orm := StoryOrm.NewOrmStory()
+	Orm := repository.NewOrmStory()
 	stories, err := Orm.GetAll()
 	status := http.StatusOK
 	if err != nil {
@@ -21,7 +21,7 @@ func GetAll(ctx *gin.Context) {
 }
 
 func GetByTitle(ctx *gin.Context) {
-	Orm := StoryOrm.NewOrmStory()
+	Orm := repository.NewOrmStory()
 	story, err := Orm.GetByTitle(ctx.Param("title"))
 	status := http.StatusOK
 	if err != nil {
@@ -34,11 +34,11 @@ func GetByTitle(ctx *gin.Context) {
 }
 
 func Create(ctx *gin.Context) {
-	Orm := StoryOrm.NewOrmStory()
-	story := &StoryOrm.Story{
+	Orm := repository.NewOrmStory()
+	story := &repository.Story{
 		Title:   ctx.PostForm("title"),
 		Author:  ctx.PostForm("author"),
-		Context: ctx.PostForm("context"),
+		Content: ctx.PostForm("content"),
 		Label:   ctx.PostForm("label"),
 	}
 	err := Orm.Create(story)
@@ -52,11 +52,11 @@ func Create(ctx *gin.Context) {
 }
 
 func Update(ctx *gin.Context) {
-	Orm := StoryOrm.NewOrmStory()
-	story := &StoryOrm.Story{
+	Orm := repository.NewOrmStory()
+	story := &repository.Story{
 		Title:   ctx.PostForm("title"),
 		Author:  ctx.PostForm("author"),
-		Context: ctx.PostForm("context"),
+		Content: ctx.PostForm("content"),
 		Label:   ctx.PostForm("label"),
 	}
 	err := Orm.Update(ctx.Param("title"), story)
@@ -70,7 +70,7 @@ func Update(ctx *gin.Context) {
 }
 
 func Delete(ctx *gin.Context) {
-	Orm := StoryOrm.NewOrmStory()
+	Orm := repository.NewOrmStory()
 	err := Orm.Delete(ctx.Param("title"))
 	status := http.StatusOK
 	if err != nil {
@@ -87,7 +87,7 @@ func GetByFilter(ctx *gin.Context) {
 		filters[key] = val
 	}
 
-	Orm := StoryOrm.NewOrmStory()
+	Orm := repository.NewOrmStory()
 	stories, err := Orm.GetByFilter(filters)
 	status := http.StatusOK
 	if err != nil {

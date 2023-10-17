@@ -1,4 +1,4 @@
-package storyOrm
+package repository
 
 import (
 	Db "blog/db"
@@ -11,7 +11,8 @@ type Story struct {
 	gorm.Model
 	Author  string
 	Title   string
-	Context string
+	Content string
+	IsDraft bool
 	Label   string
 }
 
@@ -32,27 +33,29 @@ func (s *Story) GetByTitle(title string) (Story, error) {
 }
 
 func (s *Story) Create(story *Story) error {
-	if inputCheck(story.Title, story.Author, story.Context) {
-		return errors.New("check the input info")
+	if inputCheck(story.Title, story.Author, story.Content) {
+		return errors.New("Title, Author, or Content cannot be empty")
 	}
 	err := Db.Db.Model(&Story{}).Create(map[string]interface{}{
 		"Title":   story.Title,
 		"Author":  story.Author,
-		"Context": story.Context,
+		"Context": story.Content,
 		"Label":   story.Label,
+		"IsDraft": story.IsDraft,
 	}).Error
 	return err
 }
 
 func (s *Story) Update(title string, story *Story) error {
-	if inputCheck(story.Title, story.Author, story.Context) {
-		return errors.New("check the input info")
+	if inputCheck(story.Title, story.Author, story.Content) {
+		return errors.New("Title, Author, or Content cannot be empty")
 	}
 	err := Db.Db.Model(&Story{}).Where("Title = ?", title).Updates(map[string]interface{}{
 		"Title":   story.Title,
 		"Author":  story.Author,
-		"Context": story.Context,
+		"Context": story.Content,
 		"Label":   story.Label,
+		"IsDraft": story.IsDraft,
 	}).Error
 	return err
 }
@@ -62,7 +65,6 @@ func (s *Story) Delete(title string) error {
 	return err
 }
 
-// input: [][key, value]
 func (s *Story) GetByFilter(filters map[string]interface{}) ([]Story, error) {
 	stories := []Story{}
 	err := Db.Db.Where(filters).Find(&stories).Error

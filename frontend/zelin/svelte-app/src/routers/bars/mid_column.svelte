@@ -35,5 +35,6 @@
         overflow: scroll;
         background-color: aliceblue;
         padding: 14px;
+        height: auto;
     }
 </style>
