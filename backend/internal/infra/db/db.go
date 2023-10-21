@@ -8,9 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var Db *gorm.DB
-
-func InitDb() (*gorm.DB, error) {
+func NewDb() (*gorm.DB, error) {
 	host := viper.GetString("database.host")
 	user := viper.GetString("database.user")
 	password := viper.GetString("database.password")

@@ -2,99 +2,52 @@ package usecase
 
 import (
 	"blog/internal/infra/repository"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"context"
 )
 
-func GetAll(ctx *gin.Context) {
-	Orm := repository.NewOrmStory()
-	stories, err := Orm.GetAll()
-	status := http.StatusOK
-	if err != nil {
-		status = http.StatusBadRequest
-	}
-	ctx.JSON(status, gin.H{
-		"context": stories,
-		"error":   err,
-	})
+type StoryUsecase struct {
+	storyOrm *repository.StoryOrm
 }
 
-func GetByTitle(ctx *gin.Context) {
-	Orm := repository.NewOrmStory()
-	story, err := Orm.GetByTitle(ctx.Param("title"))
-	status := http.StatusOK
-	if err != nil {
-		status = http.StatusBadRequest
+func NewStoryUsecase(storyOrm *repository.StoryOrm) *StoryUsecase {
+	return &StoryUsecase{
+		storyOrm: storyOrm,
 	}
-	ctx.JSON(status, gin.H{
-		"context": story,
-		"error":   err,
-	})
 }
 
-func Create(ctx *gin.Context) {
-	Orm := repository.NewOrmStory()
-	story := &repository.Story{
-		Title:   ctx.PostForm("title"),
-		Author:  ctx.PostForm("author"),
-		Content: ctx.PostForm("content"),
-		Label:   ctx.PostForm("label"),
-	}
-	err := Orm.Create(story)
-	status := http.StatusOK
-	if err != nil {
-		status = http.StatusBadRequest
-	}
-	ctx.JSON(status, gin.H{
-		"error": err,
-	})
+func (s *StoryUsecase) GetAll(ctx *context.Context) ([]repository.Story, error) {
+	return s.storyOrm.GetAll()
 }
 
-func Update(ctx *gin.Context) {
-	Orm := repository.NewOrmStory()
-	story := &repository.Story{
-		Title:   ctx.PostForm("title"),
-		Author:  ctx.PostForm("author"),
-		Content: ctx.PostForm("content"),
-		Label:   ctx.PostForm("label"),
-	}
-	err := Orm.Update(ctx.Param("title"), story)
-	status := http.StatusOK
-	if err != nil {
-		status = http.StatusBadRequest
-	}
-	ctx.JSON(status, gin.H{
-		"error": err,
-	})
+func (s *StoryUsecase) Get(ctx *context.Context, id uint) (repository.Story, error) {
+	return s.storyOrm.Get(id)
 }
 
-func Delete(ctx *gin.Context) {
-	Orm := repository.NewOrmStory()
-	err := Orm.Delete(ctx.Param("title"))
-	status := http.StatusOK
-	if err != nil {
-		status = http.StatusBadRequest
-	}
-	ctx.JSON(status, gin.H{
-		"error": err,
-	})
+func (s *StoryUsecase) Create(ctx *context.Context, title, content, label string, isDraft bool) (uint, error) {
+	return s.storyOrm.Create(title, content, label, isDraft)
 }
 
-func GetByFilter(ctx *gin.Context) {
-	filters := make(map[string]interface{})
-	for key, val := range ctx.Request.URL.Query() {
-		filters[key] = val
-	}
-
-	Orm := repository.NewOrmStory()
-	stories, err := Orm.GetByFilter(filters)
-	status := http.StatusOK
-	if err != nil {
-		status = http.StatusBadRequest
-	}
-	ctx.JSON(status, gin.H{
-		"context": stories,
-		"error":   err,
-	})
+func (s *StoryUsecase) Update(ctx *context.Context, id uint, title string, content string, label string, isDraft bool) error {
+	return s.storyOrm.Update(id, title, content, label, isDraft)
 }
+
+func (s *StoryUsecase) Delete(ctx *context.Context, id uint) error {
+	return s.storyOrm.Delete(id)
+}
+
+// func (s *StoryUsecase) GetByFilter(ctx *context.Context) {
+// 	filters := make(map[string]interface{})
+// 	for key, val := range ctx.Request.URL.Query() {
+// 		filters[key] = val
+// 	}
+
+// 	stories, err := s.storyOrm.GetByFilter(filters)
+// 	status := http.StatusOK
+// 	if err != nil {
+// 		status = http.StatusBadRequest
+// 	}
+// 	ctx.JSON(status, gin.H{
+// 		"context": stories,
+// 		"error":   err,
+// 	})
+// }

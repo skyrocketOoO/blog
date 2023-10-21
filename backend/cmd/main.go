@@ -2,11 +2,11 @@ package main
 
 import (
 	config "blog/config"
-	Db "blog/db"
 	"blog/internal/delivery"
+	"blog/internal/infra/db"
 	"blog/internal/infra/repository"
+	"blog/internal/usecase"
 	Middleware "blog/middleware"
-	"fmt"
 
 	"flag"
 
@@ -22,7 +22,6 @@ func main() {
 
 	config.Init()
 
-	// Logger
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	if *debug {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
@@ -32,14 +31,18 @@ func main() {
 
 	var err error
 
-	Db.Db, err = Db.InitDb()
+	db, err := db.NewDb()
 	if err != nil {
-		fmt.Println("database connect fail")
+		log.Fatal().Msg("database connect fail")
 	}
-	Db.Db.AutoMigrate(&repository.Story{})
+
+	repo := repository.NewRepository(db)
+
+	uc := usecase.NewUsecase(repo)
+
+	handler := delivery.NewHandler(uc)
 
 	server := gin.Default()
-
 	server.Use(Middleware.CORSMiddleware())
 
 	// authorized := server.Group("/", gin.BasicAuth(gin.Accounts{
@@ -60,15 +63,6 @@ func main() {
 		story.DELETE("/:title", Story.Delete)
 		story.PUT("/:title", Story.Update)
 		story.GET("/filter", Story.GetByFilter)
-	}
-
-	author := server.Group("/author")
-	{
-		author.GET("/")
-		author.GET("/:name")
-		author.POST("/")
-		author.PUT("/:name")
-		author.DELETE("/:name")
 	}
 
 	server.Run(":8080")
