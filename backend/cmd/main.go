@@ -1,12 +1,12 @@
 package main
 
 import (
-	config "blog/config"
+	"blog/config"
 	"blog/internal/delivery"
+	"blog/internal/delivery/middleware"
 	"blog/internal/infra/db"
 	"blog/internal/infra/repository"
 	"blog/internal/usecase"
-	Middleware "blog/middleware"
 
 	"flag"
 
@@ -16,12 +16,11 @@ import (
 )
 
 func main() {
+	config.Init()
+
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	debug := flag.Bool("debug", false, "sets log level to debug")
 	flag.Parse()
-
-	config.Init()
-
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	if *debug {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
@@ -37,33 +36,18 @@ func main() {
 	}
 
 	repo := repository.NewRepository(db)
-
 	uc := usecase.NewUsecase(repo)
-
-	handler := delivery.NewHandler(uc)
-
 	server := gin.Default()
-	server.Use(Middleware.CORSMiddleware())
+	server.Use(middleware.CORSMiddleware())
+	delivery.NewHandler(server, uc)
 
 	// authorized := server.Group("/", gin.BasicAuth(gin.Accounts{
 	// 	"abc": "123",
 	// }))
 
-	server.GET("/info", func(c *gin.Context) {
-		c.JSON(200, gin.H{"msg": "user.info"})
+	server.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{})
 	})
-
-	server.GET("/")
-
-	story := server.Group("/story")
-	{
-		story.GET("/", delivery.GetAll)
-		story.GET("/:title", Story.GetByTitle)
-		story.POST("/", Story.Create)
-		story.DELETE("/:title", Story.Delete)
-		story.PUT("/:title", Story.Update)
-		story.GET("/filter", Story.GetByFilter)
-	}
 
 	server.Run(":8080")
 }

@@ -1,13 +1,11 @@
 package delivery
 
-import "blog/internal/usecase"
+import (
+	"blog/internal/usecase"
 
-type Handler struct {
-	StoryHandler StoryHandler
-}
+	"github.com/gin-gonic/gin"
+)
 
-func NewHandler(usecase *usecase.Usecase) *Handler {
-	return &Handler{
-		StoryHandler: *NewStoryHandler(usecase.StoryUsecase),
-	}
+func NewHandler(server *gin.Engine, usecase *usecase.Usecase) {
+	NewStoryHandler(server.Group("/story"), usecase.StoryUsecase)
 }

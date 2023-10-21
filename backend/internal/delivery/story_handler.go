@@ -12,10 +12,15 @@ type StoryHandler struct {
 	storyUsecase *usecase.StoryUsecase
 }
 
-func NewStoryHandler(storyUsecase *usecase.StoryUsecase) *StoryHandler {
-	return &StoryHandler{
+func NewStoryHandler(router *gin.RouterGroup, storyUsecase *usecase.StoryUsecase) {
+	handler := &StoryHandler{
 		storyUsecase: storyUsecase,
 	}
+	router.GET("/", handler.GetAll)
+	router.GET("/:title", handler.Get)
+	router.POST("/", handler.Create)
+	router.DELETE("/:title", handler.Delete)
+	router.PUT("/:title", handler.Update)
 }
 
 func (s *StoryHandler) GetAll(ctx *gin.Context) {

@@ -1,10 +1,7 @@
 build:
-	docker build -t alpha-bee:latest -f Dockerfile/web.dockerfile .
+	docker build -t blog:latest .
 
 push:
-	docker push web:latest
-
-benchmark:
-	k6 run benchmark/index.js
+	docker push blog:latest
 
 all: build push
