@@ -6,5 +6,6 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main cmd/main.go
 FROM alpine:latest
 WORKDIR /app
 COPY --from=0 /builder/main ./
-COPY ./config/config.yaml ./config/config.yaml
+COPY ./config/config.yaml ./config/
+COPY ./wait-for-it.sh ./
 CMD ["./main"]
