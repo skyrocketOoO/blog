@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  backend:
+    image: qingyuntasha/blog:latest
+    container_name: backend
+    depends_on:
+      - postgres
