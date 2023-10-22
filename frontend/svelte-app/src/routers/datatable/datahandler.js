@@ -4,6 +4,7 @@ export class DataHandler {
       this.data = data;
       this.rowsPerPage = options.rowsPerPage || 10;
       this.currentPage = 1;
+      console.log(data[0])
     }
   
     getRows() {
