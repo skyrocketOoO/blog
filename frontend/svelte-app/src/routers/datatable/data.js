@@ -1,4 +1,4 @@
-export const data = [
+const data = [
     { id: 1, first_name: 'Tobie', last_name: 'Vint', email: 'tvint0@fotki.com' },
     { id: 2, first_name: 'Zacharias', last_name: 'Cerman', email: 'zcerman1@sciencedirect.com' },
     { id: 3, first_name: 'Gérianna', last_name: 'Bunn', email: 'gbunn2@foxnews.com' },
@@ -224,4 +224,8 @@ export const data = [
     { id: 173, first_name: 'Zack', last_name: 'Ketteman', email: 'zketteman4s@reverbnation.com' },
     { id: 174, first_name: 'Clemence', last_name: 'Philpots', email: 'cphilpots4t@about.com' },
     { id: 175, first_name: 'Yehudi', last_name: 'Bater', email: 'ybater4u@themeforest.net' }
-]
+];
+
+export default data;
+
+
