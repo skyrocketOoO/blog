@@ -13,3 +13,4 @@ services:
     container_name: backend
     depends_on:
       - postgres
+    command: ["./wait-for-it.sh", "postgres:5432", "--", "./main"]
