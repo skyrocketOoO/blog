@@ -1,49 +1,35 @@
 <script>
-    import { DataHandler } from './datahandler'; // Make sure the path to DataHandler.js is correct
-    import data from './data'; // Assuming you have a data.js file with your data
+</script>
   
-
-    let rowsArray = [];
-    const unsubscribe = rows.subscribe(value => {
-        rowsArray = value;
-    });
-    const handler = new DataHandler(data, { rowsPerPage: 10 });
-    let rows = handler.getRows();
-
-    onDestroy(() => {
-        unsubscribe();
-    });
-  </script>
-  
-  <table>
+<table>
     <thead>
-      <tr>
+        <tr>
         <th>First name</th>
         <th>Last name</th>
         <th>Email</th>
-      </tr>
+        </tr>
     </thead>
     <tbody>
-      {#each rows as row}
+        {#each rows as row}
         <tr>
-          <td>{row.first_name}</td>
-          <td>{row.last_name}</td>
-          <td>{row.email}</td>
+            <td>{row.first_name}</td>
+            <td>{row.last_name}</td>
+            <td>{row.email}</td>
         </tr>
-      {/each}
+        {/each}
     </tbody>
-  </table>
-  
-  <style>
+</table>
+
+<style>
     table {
-      text-align: left;
-      border-collapse: separate;
-      border-spacing: 0;
-      width: 100%;
+        text-align: left;
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
     }
     td, th {
-      padding: 4px 20px;
-      border-bottom: 1px solid #eee;
+        padding: 4px 20px;
+        border-bottom: 1px solid #eee;
     }
-  </style>
+</style>
   
