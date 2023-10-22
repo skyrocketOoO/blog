@@ -10,13 +10,13 @@
         </tr>
     </thead>
     <tbody>
-        {#each rows as row}
+        <!-- {#each rows as row}
         <tr>
             <td>{row.first_name}</td>
             <td>{row.last_name}</td>
             <td>{row.email}</td>
         </tr>
-        {/each}
+        {/each} -->
     </tbody>
 </table>
 
