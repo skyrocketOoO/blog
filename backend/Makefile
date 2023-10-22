@@ -1,7 +1,7 @@
 build:
-	docker build -t blog:latest .
+	docker build -t qingyuntasha/blog:latest .
 
 push:
-	docker push blog:latest
+	docker push qingyuntasha/blog:latest
 
 all: build push
