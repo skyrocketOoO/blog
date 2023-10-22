@@ -7,5 +7,5 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=0 /builder/main ./
 COPY ./config/config.yaml ./config/
-COPY ./wait-for-it.sh ./
+COPY ./wait-for-it.sh .
 CMD ["./main"]
