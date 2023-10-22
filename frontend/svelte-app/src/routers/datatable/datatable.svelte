@@ -2,8 +2,17 @@
     import { DataHandler } from './datahandler'; // Make sure the path to DataHandler.js is correct
     import data from './data'; // Assuming you have a data.js file with your data
   
+
+    let rowsArray = [];
+    const unsubscribe = rows.subscribe(value => {
+        rowsArray = value;
+    });
     const handler = new DataHandler(data, { rowsPerPage: 10 });
     let rows = handler.getRows();
+
+    onDestroy(() => {
+        unsubscribe();
+    });
   </script>
   
   <table>

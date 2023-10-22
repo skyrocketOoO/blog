@@ -1,3 +1,5 @@
+import { writable } from 'svelte/store';
+
 export class DataHandler {
   constructor(data, options) {
     this.data = data;
@@ -8,7 +10,9 @@ export class DataHandler {
   getRows() {
     const startIdx = (this.currentPage - 1) * this.rowsPerPage;
     const endIdx = startIdx + this.rowsPerPage;
-    return this.data.slice(startIdx, endIdx);
+    const slicedRows = this.data.slice(startIdx, endIdx);
+    rows.set(slicedRows); // Set the store value with sliced rows
+    return slicedRows; // Return sliced rows
   }
 
   nextPage() {
@@ -24,3 +28,6 @@ export class DataHandler {
     }
   }
 }
+
+
+export const rows = writable([]);
