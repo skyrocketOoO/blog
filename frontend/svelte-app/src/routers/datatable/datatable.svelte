@@ -1,5 +1,5 @@
 <script>
-    import { DataHandler } from './DataHandler'; // Make sure the path to DataHandler.js is correct
+    import { DataHandler } from './datahandler'; // Make sure the path to DataHandler.js is correct
     import data from './data'; // Assuming you have a data.js file with your data
   
     const handler = new DataHandler(data, { rowsPerPage: 10 });
