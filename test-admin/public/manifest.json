@@ -1,5 +1,5 @@
 {
-    "short_name": "admin-server",
+    "short_name": "test-admin",
     "name": "{{name}}",
     "icons": [
         {

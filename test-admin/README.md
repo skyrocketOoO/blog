@@ -1,4 +1,4 @@
-# admin-server
+# test-admin
 
 ## Installation
 

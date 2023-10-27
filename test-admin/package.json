@@ -1,5 +1,5 @@
 {
-  "name": "admin-server",
+  "name": "test-admin",
   "private": true,
   "scripts": {
     "dev": "vite",
